@@ -69,8 +69,9 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
-            Emaxis Viewer&nbsp;
-            <code className={styles.code}>pages/index.tsx</code>
+            Emaxis Viewer
+            {/* &nbsp; */}
+            {/* <code className={styles.code}>pages/index.tsx</code> */}
           </p>
           <div>
             <a
