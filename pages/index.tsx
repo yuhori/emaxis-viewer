@@ -2,12 +2,62 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
+import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const [rows, setRows] = useState<GridRowsProp>([]);
+
+  useEffect(() => {
+    const url = 'http://localhost:3000/api/emaxis';
+    axios.get(url).then((response) => {
+      console.log(response.data);
+      const datas = [];
+      for (const key in response.data) {
+        datas.push(response.data[key])
+      }
+      setRows(datas);
+    });
+  }, []);
+
+  const columns: GridColDef[] = [
+    {
+      field: 'name',
+      headerName: '名前',
+    },
+    {
+      field: 'fund_id',
+      headerName: 'ファンドID',
+    },
+    {
+      field: 'koumokuromi',
+      headerName: '交付目論見書',
+    },
+    {
+      field: 'seimokuromi',
+      headerName: '請求目論見書',
+    },
+    {
+      field: 'kouunyou',
+      headerName: '交付運用報告書',
+    },
+    {
+      field: 'zenunyou',
+      headerName: '運用報告書（全体版）',
+    },
+    {
+      field: 'geppou',
+      headerName: '月報',
+    },
+    {
+      field: 'shuhou',
+      headerName: '週報',
+    },
+  ];
+  
   return (
     <>
       <Head>
@@ -19,7 +69,7 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
-            Get started by editing&nbsp;
+            Emaxis Viewer&nbsp;
             <code className={styles.code}>pages/index.tsx</code>
           </p>
           <div>
@@ -30,11 +80,11 @@ export default function Home() {
             >
               By{' '}
               <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
+                src="/yuhori.png"
+                alt="YuHori Logo"
                 className={styles.vercelLogo}
-                width={100}
-                height={24}
+                width={48}
+                height={48}
                 priority
               />
             </a>
@@ -42,80 +92,28 @@ export default function Home() {
         </div>
 
         <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-          <div className={styles.thirteen}>
-            <Image
-              src="/thirteen.svg"
-              alt="13"
-              width={40}
-              height={31}
-              priority
+          <div style={{ height: 300, width: 1024 }}>
+            <DataGrid
+              getRowId={(row) => row.fund_id}
+              // sx={Styles.grid}
+              rows={rows}
+              columns={columns}
             />
-          </div>
+            </div>
         </div>
 
         <div className={styles.grid}>
           <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+            href="https://emaxis.jp/special/api/pdf/emaxis_api.pdf"
             className={styles.card}
             target="_blank"
             rel="noopener noreferrer"
           >
             <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
+              Emaxis API Docs <span>-&gt;</span>
             </h2>
             <p className={inter.className}>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className={inter.className}>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p className={inter.className}>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
+              Fund 一覧については、こちらの API から取得している。
             </p>
           </a>
         </div>
